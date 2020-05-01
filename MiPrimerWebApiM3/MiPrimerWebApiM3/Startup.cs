@@ -35,6 +35,8 @@ namespace MiPrimerWebApiM3
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(configuration => configuration.CreateMap<Autor,AutorDTO>(), typeof(Startup));
+            services.AddAutoMapper(configuration => configuration.CreateMap<AutorCreacionDTO,Autor>(), typeof(Startup));
+
             services.AddTransient<IHostedService,WriteToFileHostedServices>();
             services.AddTransient<IHostedService, ConsumeScopeService>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();

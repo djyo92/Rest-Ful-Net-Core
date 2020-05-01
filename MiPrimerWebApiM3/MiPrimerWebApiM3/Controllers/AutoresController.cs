@@ -48,21 +48,24 @@ namespace MiPrimerWebApiM3.Controllers
             return autorDTO;
         }
         [HttpGet("{id}",Name ="ObtenerAutor")]
-        public async Task<ActionResult<Autor>> Get(int id)
+        public async Task<ActionResult<AutorDTO>> Get(int id)
         {
             var autor = await context.Autores.Include(x=>x.Libros).FirstOrDefaultAsync(x => x.Id == id);
             if (autor == null) {
                 logger.LogWarning($"El autor con el id {1} no ha sido encontrado");
                 return NotFound();
             }
-            return autor;
+            var autorDTO = mapper.Map<AutorDTO>(autor);
+            return autorDTO;
         }
         [HttpPost]
-        public ActionResult Post([FromBody] Autor auttor)
+        public async Task<ActionResult> Post([FromBody] AutorCreacionDTO autorCreacion)
         {
-            context.Autores.Add(auttor);
-            context.SaveChanges();
-            return new CreatedAtRouteResult("ObtenerAutor",new { id = auttor.Id},auttor);
+            var autor = mapper.Map<Autor>(autorCreacion);
+            context.Autores.Add(autor);
+            await context.SaveChangesAsync();
+            var autorDTO = mapper.Map<AutorDTO>(autor);
+            return new CreatedAtRouteResult("ObtenerAutor",new { id = autor.Id}, autorDTO);
         }
         [HttpPut("{id}")]
         public ActionResult Put(int id,[FromBody] Autor value)
