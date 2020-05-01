@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using MiPrimerWebApiM3.DataContext;
 using MiPrimerWebApiM3.Entities;
 using MiPrimerWebApiM3.Helpers;
+using MiPrimerWebApiM3.Models;
 using MiPrimerWebApiM3.Services;
 
 namespace MiPrimerWebApiM3.Controllers
@@ -20,12 +22,14 @@ namespace MiPrimerWebApiM3.Controllers
         private readonly AplicationDbContext context;
         private readonly IClaseB claseB;
         private readonly ILogger<AutoresController> logger;
+        private readonly IMapper mapper;
 
-        public AutoresController(AplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger)
+        public AutoresController(AplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger, IMapper mapper)
         {
             this.context = context;
             this.claseB = claseB;
             this.logger = logger;
+            this.mapper = mapper;
         }
         [HttpGet]
         [ServiceFilter(typeof(MiFiltroDeAccion))]
@@ -37,9 +41,11 @@ namespace MiPrimerWebApiM3.Controllers
             return context.Autores.Include(x=>x.Libros).ToList();
         }
         [HttpGet("primer")]
-        public ActionResult<Autor> GetPrimerAutor()
+        public ActionResult<AutorDTO> GetPrimerAutor()
         {
-            return context.Autores.FirstOrDefault();
+            var autor = context.Autores.FirstOrDefault();
+            var autorDTO = mapper.Map<AutorDTO>(autor);
+            return autorDTO;
         }
         [HttpGet("{id}",Name ="ObtenerAutor")]
         public async Task<ActionResult<Autor>> Get(int id)
