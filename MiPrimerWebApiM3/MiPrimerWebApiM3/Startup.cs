@@ -32,6 +32,7 @@ namespace MiPrimerWebApiM3
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IHostedService,WriteToFileHostedServices>();
+            services.AddTransient<IHostedService, ConsumeScopeService>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
             services.AddDbContext<AplicationDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("AutoresDbConection")));
