@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MiPrimerWebApiM3.DataContext;
+using MiPrimerWebApiM3.Services;
 
 namespace MiPrimerWebApiM3
 {
@@ -33,6 +34,7 @@ namespace MiPrimerWebApiM3
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
             services.AddControllers();
+            services.AddTransient<IClaseB, ClaseB>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

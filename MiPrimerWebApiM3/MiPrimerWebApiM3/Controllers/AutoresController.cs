@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MiPrimerWebApiM3.DataContext;
 using MiPrimerWebApiM3.Entities;
+using MiPrimerWebApiM3.Services;
 
 namespace MiPrimerWebApiM3.Controllers
 {
@@ -15,14 +16,17 @@ namespace MiPrimerWebApiM3.Controllers
     public class AutoresController : ControllerBase
     {
         private readonly AplicationDbContext context;
+        private readonly IClaseB claseB;
 
-        public AutoresController(AplicationDbContext context)
+        public AutoresController(AplicationDbContext context, IClaseB claseB)
         {
             this.context = context;
+            this.claseB = claseB;
         }
         [HttpGet]
         public ActionResult<IEnumerable<Autor>> Get()
         {
+            claseB.HacerAlgo();
             return context.Autores.Include(x=>x.Libros).ToList();
         }
         [HttpGet("primer")]
