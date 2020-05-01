@@ -30,7 +30,8 @@ namespace MiPrimerWebApiM3
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {            
+        {
+            services.AddTransient<IHostedService,WriteToFileHostedServices>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
             services.AddDbContext<AplicationDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("AutoresDbConection")));

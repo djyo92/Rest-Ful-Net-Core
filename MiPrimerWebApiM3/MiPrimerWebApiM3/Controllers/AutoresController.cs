@@ -31,7 +31,7 @@ namespace MiPrimerWebApiM3.Controllers
         [ServiceFilter(typeof(MiFiltroDeAccion))]
         public ActionResult<IEnumerable<Autor>> Get()
         {
-            throw new Exception("Ocurrio una excepcion");
+            //throw new Exception("Ocurrio una excepcion");
             logger.LogInformation("Obteniendo los autores");
             claseB.HacerAlgo();
             return context.Autores.Include(x=>x.Libros).ToList();
