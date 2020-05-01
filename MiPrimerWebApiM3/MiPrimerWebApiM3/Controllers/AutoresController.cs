@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MiPrimerWebApiM3.DataContext;
 using MiPrimerWebApiM3.Entities;
+using MiPrimerWebApiM3.Helpers;
 using MiPrimerWebApiM3.Services;
 
 namespace MiPrimerWebApiM3.Controllers
@@ -27,8 +28,10 @@ namespace MiPrimerWebApiM3.Controllers
             this.logger = logger;
         }
         [HttpGet]
+        [ServiceFilter(typeof(MiFiltroDeAccion))]
         public ActionResult<IEnumerable<Autor>> Get()
         {
+            throw new Exception("Ocurrio una excepcion");
             logger.LogInformation("Obteniendo los autores");
             claseB.HacerAlgo();
             return context.Autores.Include(x=>x.Libros).ToList();
