@@ -8,7 +8,6 @@ namespace MiPrimerWebApiM3.Models
 {
     public class AutorCreacionDTO
     {
-        public int Id { get; set; }
         [Required]
         [StringLength(10, ErrorMessage = "El campo debe tener {1} caracteres o menos")]
         //[PrimeraLetraMayuscula]
