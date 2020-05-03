@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -66,6 +67,26 @@ namespace MiPrimerWebApiM3.Controllers
             await context.SaveChangesAsync();
             var autorDTO = mapper.Map<AutorDTO>(autor);
             return new CreatedAtRouteResult("ObtenerAutor",new { id = autor.Id}, autorDTO);
+        }
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> Patch(int id,[FromBody] JsonPatchDocument<Autor> patchDocument)
+        {
+            if (patchDocument == null) return BadRequest();
+            var autor = context.Autores.FirstOrDefault(x => x.Id == id);
+            if (autor == null)
+            {
+                return NotFound();
+            }
+            patchDocument.ApplyTo(autor,ModelState);
+
+            var isValid = TryValidateModel(autor);
+            if(!isValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await context.SaveChangesAsync();
+            return NoContent();
         }
         [HttpPut("{id}")]
         public ActionResult Put(int id,[FromBody] Autor value)
