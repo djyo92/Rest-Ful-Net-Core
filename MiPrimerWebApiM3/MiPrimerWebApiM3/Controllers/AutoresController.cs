@@ -69,7 +69,7 @@ namespace MiPrimerWebApiM3.Controllers
             return new CreatedAtRouteResult("ObtenerAutor",new { id = autor.Id}, autorDTO);
         }
         [HttpPatch("{id}")]
-        public async Task<ActionResult> Patch(int id,[FromBody] JsonPatchDocument<Autor> patchDocument)
+        public async Task<ActionResult> Patch(int id,[FromBody] JsonPatchDocument<AutorCreacionDTO> patchDocument)
         {
             if (patchDocument == null) return BadRequest();
             var autor = context.Autores.FirstOrDefault(x => x.Id == id);
@@ -77,8 +77,10 @@ namespace MiPrimerWebApiM3.Controllers
             {
                 return NotFound();
             }
-            patchDocument.ApplyTo(autor,ModelState);
-
+            var autorDTO = mapper.Map<AutorCreacionDTO>(autor);
+            
+            patchDocument.ApplyTo(autorDTO, ModelState);
+            mapper.Map(autorDTO, autor);
             var isValid = TryValidateModel(autor);
             if(!isValid)
             {
