@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MiPrimerWebApiM3.Data;
 using MiPrimerWebApiM3.DataContext;
 using MiPrimerWebApiM3.Entities;
 using MiPrimerWebApiM3.Helpers;
@@ -49,6 +50,7 @@ namespace MiPrimerWebApiM3
             services.AddMvc(options => options.Filters.Add(new MiFiltroDeExcepcion()));
             services.AddTransient<IClaseB, ClaseB>();
             services.AddScoped<MiFiltroDeAccion>();
+            services.AddScoped<AutorRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

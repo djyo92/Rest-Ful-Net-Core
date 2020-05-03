@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MiPrimerWebApiM3.Data;
 using MiPrimerWebApiM3.DataContext;
 using MiPrimerWebApiM3.Entities;
 using MiPrimerWebApiM3.Helpers;
@@ -24,13 +25,15 @@ namespace MiPrimerWebApiM3.Controllers
         private readonly IClaseB claseB;
         private readonly ILogger<AutoresController> logger;
         private readonly IMapper mapper;
+        private readonly AutorRepository autorRepository;
 
-        public AutoresController(AplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger, IMapper mapper)
+        public AutoresController(AplicationDbContext context, IClaseB claseB, ILogger<AutoresController> logger, IMapper mapper, AutorRepository autorRepository)
         {
             this.context = context;
             this.claseB = claseB;
             this.logger = logger;
             this.mapper = mapper;
+            this.autorRepository = autorRepository;
         }
         [HttpGet]
         [ServiceFilter(typeof(MiFiltroDeAccion))]
@@ -40,6 +43,11 @@ namespace MiPrimerWebApiM3.Controllers
             logger.LogInformation("Obteniendo los autores");
             claseB.HacerAlgo();
             return context.Autores.Include(x=>x.Libros).ToList();
+        }
+        [HttpGet("apellido")]
+        public ActionResult<string> GetApellido()
+        {
+            return autorRepository.GetApellido();
         }
         [HttpGet("primer")]
         public ActionResult<AutorDTO> GetPrimerAutor()
