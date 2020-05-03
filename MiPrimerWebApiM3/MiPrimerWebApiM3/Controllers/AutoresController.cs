@@ -101,14 +101,14 @@ namespace MiPrimerWebApiM3.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Autor> Delete(int id)
         {
-            var autor = context.Autores.FirstOrDefault(x => x.Id == id);
-            if (autor == null)
+            var autorID = context.Autores.Select(x=>x.Id).FirstOrDefault(x => x == id);
+            if (autorID == default(int))
             {
                 return NotFound();
             }
-            context.Autores.Remove(autor);
+            context.Autores.Remove(new Autor() { Id=autorID});
             context.SaveChanges();
-            return autor;
+            return NoContent();
         }
     }
 }
