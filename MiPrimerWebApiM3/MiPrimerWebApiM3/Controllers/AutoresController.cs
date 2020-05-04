@@ -21,7 +21,7 @@ namespace MiPrimerWebApiM3.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
     public class AutoresController : ControllerBase
     {
         private readonly AplicationDbContext context;

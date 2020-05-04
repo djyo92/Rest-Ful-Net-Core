@@ -41,7 +41,7 @@ namespace MiPrimerWebApiM3.Controllers
 
         // POST: api/Libros
         [HttpPost]
-        public ActionResult post([FromBody] Libro libro)
+        public ActionResult Post([FromBody] Libro libro)
         {
             context.Libros.Add(libro);
             context.SaveChanges();

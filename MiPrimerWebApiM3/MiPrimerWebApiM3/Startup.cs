@@ -38,6 +38,12 @@ namespace MiPrimerWebApiM3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("PermitirApiRequest",
+                    builder => builder.WithOrigins("http://www.apirequest.io").WithMethods("GET", "POST").AllowAnyHeader());
+            });
+
             services.AddDbContext<AplicationDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("AutoresDbConection")));
             services.AddIdentity<AplicationUser, IdentityRole>()
@@ -89,7 +95,10 @@ namespace MiPrimerWebApiM3
             app.UseAuthentication();
 
             app.UseAuthorization();
-            
+
+            app.UseCors();
+            //app.UseCors(builder => builder.WithOrigins("http://www.apirequest.io").WithMethods("GET", "POST").AllowAnyHeader());
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
