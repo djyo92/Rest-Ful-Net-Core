@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MiPrimerWebApiM3.Entities;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MiPrimerWebApiM3.DataContext
 {
-    public class AplicationDbContext : DbContext
+    public class AplicationDbContext : IdentityDbContext<AplicationUser>
     {
         public AplicationDbContext(DbContextOptions<AplicationDbContext> options)
             : base(options)

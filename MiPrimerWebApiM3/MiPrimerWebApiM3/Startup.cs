@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using MiPrimerWebApiM3.Data;
 using MiPrimerWebApiM3.DataContext;
 using MiPrimerWebApiM3.Entities;
@@ -35,14 +38,32 @@ namespace MiPrimerWebApiM3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AplicationDbContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("AutoresDbConection")));
+            services.AddIdentity<AplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AplicationDbContext>()
+                .AddDefaultTokenProviders();
+
             services.AddAutoMapper(configuration => configuration.CreateMap<Autor,AutorDTO>(), typeof(Startup));
             services.AddAutoMapper(configuration => configuration.CreateMap<AutorCreacionDTO,Autor>().ReverseMap(), typeof(Startup));
 
             services.AddTransient<IHostedService,WriteToFileHostedServices>();
             services.AddTransient<IHostedService, ConsumeScopeService>();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
-            services.AddDbContext<AplicationDbContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("AutoresDbConection")));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                 options.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateIssuer = false,
+                     ValidateAudience = false,
+                     ValidateLifetime = true,
+                     ValidateIssuerSigningKey = true,
+                     IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(Configuration["jwt:key"])),
+                     ClockSkew = TimeSpan.Zero
+                 });
+
+
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
@@ -65,8 +86,10 @@ namespace MiPrimerWebApiM3
 
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+
+            app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +21,7 @@ namespace MiPrimerWebApiM3.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AutoresController : ControllerBase
     {
         private readonly AplicationDbContext context;
@@ -44,7 +47,7 @@ namespace MiPrimerWebApiM3.Controllers
             claseB.HacerAlgo();
             return context.Autores.Include(x=>x.Libros).ToList();
         }
-        [HttpGet("apellido")]
+        [HttpGet("apellido")]        
         public ActionResult<string> GetApellido()
         {
             return autorRepository.GetApellido();
