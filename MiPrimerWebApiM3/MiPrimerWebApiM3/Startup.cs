@@ -43,6 +43,8 @@ namespace MiPrimerWebApiM3
                 options.AddPolicy("PermitirApiRequest",
                     builder => builder.WithOrigins("http://www.apirequest.io").WithMethods("GET", "POST").AllowAnyHeader());
             });
+            services.AddScoped<HashService>();
+            services.AddDataProtection();
 
             services.AddDbContext<AplicationDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("AutoresDbConection")));
